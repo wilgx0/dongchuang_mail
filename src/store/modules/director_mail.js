@@ -33,15 +33,13 @@ const actions = {
         });
     },
     loadMore_director_mail_list({commit,state},obj){		//加载更多数据
-
-       // console.log(obj);
         var _this = this;
         ++ state.page;
-
         if(state.page <= state.LastPage){
             getData(_this._vm.$url + '/api/director/public/get_director_mail_list',{
                 page : state.page,
             },function(response){
+                obj.$refs.loadmore.onBottomLoaded();    //单次数据加载完毕
                 response = response.data;
                 if(response.code == 1){
                     commit(types.GET_DIRECTOR_MAIL_LIST,response.data);
@@ -59,10 +57,8 @@ const actions = {
 
 const mutations = {
     [types.GET_DIRECTOR_MAIL_LIST](state,data) {
-       // console.log(data);
         state.director_mail_list = state.director_mail_list.concat(data.data);
         state.LastPage = data.last_page;
-        console.log(state.director_mail_list);
     },
 }
 
