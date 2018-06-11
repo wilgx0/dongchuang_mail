@@ -1,9 +1,9 @@
 <template>
     <div class="director-mail">
         <mt-header fixed title="东川110局长信箱">
-            <router-link to="/" slot="right">
-                <mt-button>我要留言</mt-button>
-            </router-link>
+            <div slot="right">
+                <mt-button @click="show_msg">我要留言</mt-button>
+            </div>
         </mt-header>
 
         <!--主要内容-->
@@ -56,6 +56,37 @@
         </modal-dialog>
 
         <!--提交留言-->
+        <modal-dialog ref="dialog_2" class="dialog_2">
+            <div slot="heading">
+                <h1 style="text-align:center;">
+                    <span style="float:right;padding-right:10px;" @click="hide_msg">关闭</span>
+                    向东川区公安局局长留言
+                </h1>
+            </div>
+
+            <div>
+                <div class="page-part" style="margin-bottom:20px;">
+                    <mt-field label="留言内容" placeholder="留言内容不少于20个字，请尽量叙述清晰，简明扼要"
+                              type="textarea" rows="8"></mt-field>
+
+                </div>
+
+                <div style="font-size:14px;color:#888;margin-bottom:5px;padding-left:5px;">
+                    以下内容仅供工作人员查看，不对外公开
+                </div>
+                <div class="page-part">
+                    <mt-field label="用户名" placeholder="请输入用户名" :attr="{ maxlength: 10 }"></mt-field>
+                    <mt-field label="手机号" placeholder="请输入手机号" type="tel"></mt-field>
+                </div>
+                <div style="margin-top:10px;text-align:center;">
+                    <mt-button type="primary" style="width:80%;">提 交</mt-button>
+                </div>
+
+            </div>
+
+        </modal-dialog>
+
+
     </div>
 </template>
 
@@ -99,6 +130,12 @@
             hide_detail(){                               //关闭留言的详情
                 this.$refs.dialog_1.close()
             },
+            show_msg(){
+                this.$refs.dialog_2.open()
+            },
+            hide_msg(){
+                this.$refs.dialog_2.close()
+            }
         },
         created() {
             this.$store.dispatch('get_director_mail_list');
@@ -185,6 +222,17 @@
                     }
                 }
             }
+        }
+        .dialog_2{
+            .dialog{
+                background-color:#f0f0f0;
+                .dialog-body{
+                    padding: 0px;
+                    background-color:#f0f0f0;
+                }
+            }
+
+
         }
     }
 
