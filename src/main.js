@@ -9,6 +9,7 @@ import 'mint-ui/lib/style.css'
 import axios from 'axios'
 //import qs from 'qs'
 import store from './store/index.js'
+import './validate.js'
 
 Vue.config.productionTip = false
 Vue.use(Mint);
