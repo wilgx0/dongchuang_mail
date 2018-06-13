@@ -264,7 +264,7 @@
         .dialog_1 {
             color: #2c3e50;
             .item-content {
-                height: 660px;
+                height: 90%;
                 overflow: scroll;
                 padding: 10px;
                 strong {
