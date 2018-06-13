@@ -73,7 +73,7 @@
                 </h1>
             </div>
 
-            <div>
+            <div class="dialog-content">
                 <div class="page-part" style="margin-bottom:20px;">
                     <mt-field label="留言内容" placeholder="留言内容不少于20个字，请尽量叙述清晰，简明扼要"
                               type="textarea" rows="8" v-model='message' v-validate="'required|min:20'"
@@ -91,7 +91,7 @@
                 </div>
                 <div style="margin-top:10px;text-align:center;">
                     <mt-button type="primary" style="width:80%;margin-bottom:10px;" @click="add_msg">提 交</mt-button>
-                    <mt-button type="default" style="width:80%;" @click="hide_msg">关 闭</mt-button>
+                    <!--<mt-button type="default" style="width:80%;" @click="hide_msg">关 闭</mt-button>-->
                 </div>
             </div>
             <div v-show="errors.any()" v-cloak :class='["error"]'>
@@ -290,6 +290,8 @@
                 .dialog-body {
                     padding: 0px;
                     background-color: #f0f0f0;
+                    overflow:hidden;
+
                 }
             }
 
