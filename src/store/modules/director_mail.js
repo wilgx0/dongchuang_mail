@@ -39,6 +39,7 @@ const actions = {
                     callback();
                 }
             } else {                    //提交失败
+                Indicator.close();
                 Toast(response.msg);
             }
         });

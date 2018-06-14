@@ -17,12 +17,12 @@
                             <div class="item-content">
                                 <p><span class="item-content-right">{{item.createtime|timestampToTime}}</span><strong>{{item.name}}：</strong>
                                 </p>
-                                <p>{{item.message|substring(40)}} <em v-if="item.message.length > 40">[查看全文]</em></p>
+                                <p>{{item.message|substring(100)}} <em v-if="item.message.length > 100">[查看全文]</em></p>
                                 <template v-if="item.replycontent">
                                     <p><span
                                             class="item-content-right">{{item.replytime|timestampToTime}}</span><strong>局长回复：</strong>
                                     </p>
-                                    <p>{{item.replycontent|substring(40)}}</p>
+                                    <p>{{item.replycontent|substring(100)}}<em v-if="item.message.length > 100">[查看全文]</em></p>
                                 </template>
                             </div>
                         </li>
@@ -75,7 +75,7 @@
 
             <div class="dialog-content">
                 <div class="page-part" style="margin-bottom:20px;">
-                    <mt-field label="留言内容" placeholder="留言内容不少于20个字，请尽量叙述清晰，简明扼要"
+                    <mt-field label="" placeholder="留言内容不少于20个字，请尽量叙述清晰，简明扼要"
                               type="textarea" rows="8" v-model='message' v-validate="'required|min:20'"
                               name="留言内容"></mt-field>
                 </div>
