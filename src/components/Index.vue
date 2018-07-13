@@ -74,12 +74,14 @@
             </div>
 
             <div class="dialog-content">
-                <div class="page-part" style="margin-bottom:20px;">
+                <div class="page-part" style="margin-bottom:10px;">
                     <mt-field label="" placeholder="留言内容不少于20个字，请尽量叙述清晰，简明扼要"
-                              type="textarea" rows="8" v-model='message' v-validate="'required|min:20'"
+                              type="textarea" rows="5" v-model='message' v-validate="'required|min:20'"
                               name="留言内容"></mt-field>
                 </div>
-
+                <div style="font-size:14px;color:red;margin-bottom:20px;padding-left:5px;">
+                    {{notice}}
+                </div>
                 <div style="font-size:14px;color:#888;margin-bottom:5px;padding-left:5px;">
                     以下内容仅供工作人员查看，不对外公开
                 </div>
@@ -145,6 +147,14 @@
                     return this.$store.state.director_mail.message
                 }
             },
+            notice: {
+                set(value) {
+                    this.$store.state.director_mail.notice = value
+                },
+                get() {
+                    return this.$store.state.director_mail.notice
+                }
+            },
         },
         filters: {
             substring: function (value, length) {
@@ -194,11 +204,11 @@
                 setTimeout(function(){
                     _this.errors.clear();
                 },300)
-
             },
         },
         created() {
             this.$store.dispatch('get_director_mail_list');
+            this.$store.dispatch('get_notice');
         },
         mounted() {
             this.wrapperHeight = document.documentElement.clientHeight - this.$refs.wrapper.getBoundingClientRect().top;

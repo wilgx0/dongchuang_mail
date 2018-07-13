@@ -12,6 +12,7 @@ const state ={
     director_mail_list:[],
     LastPage:0,     //总页数
     page:1,			//当前页数
+    notice:'',
     ...formData,
 }
 
@@ -61,6 +62,17 @@ const actions = {
             }
         });
     },
+    get_notice({commit,state}){               //获取举报须知
+        var _this = this;
+        getData(_this._vm.$url + '/api/director/public/get_notice',{},function(response){
+            //console.log(response);
+            response = response.data;
+            if(response.code == 1){
+                commit(types.GET_NOTICE,response.msg);
+            }
+
+        });
+    },
     loadMore_director_mail_list({commit,state},obj){		//加载更多数据
         var _this = this;
         ++ state.page;
@@ -89,6 +101,9 @@ const mutations = {
         state.director_mail_list = state.director_mail_list.concat(data.data);
         state.LastPage = data.last_page;
     },
+    [types.GET_NOTICE](state,data){
+        state.notice = data;
+    }
 }
 
 export default {
