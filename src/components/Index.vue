@@ -1,6 +1,6 @@
 <template>
     <div class="director-mail">
-        <mt-header fixed title="东川110局长信箱">
+        <mt-header fixed :title="site_info.site_name||'' ">
             <div slot="right">
                 <mt-button @click="show_msg">我要留言</mt-button>
             </div>
@@ -90,6 +90,10 @@
                               name="用户名"></mt-field>
                     <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model='tel' v-validate="'required|phone'"
                               name="手机号"></mt-field>
+                    <!--验证码-->
+                    <mt-field label="验证码" v-model="captcha" placeholder="验证码" v-validate="'required'" name="验证码">
+                        <img :src="captchaUrl" height="45px" width="100px" onclick="this.src=this.src+'?'">
+                    </mt-field>
                 </div>
                 <div style="margin-top:10px;text-align:center;">
                     <mt-button type="primary" style="width:80%;margin-bottom:10px;" @click="add_msg">提 交</mt-button>
@@ -119,10 +123,11 @@
                 wrapperHeight: 0,
                 detail_index: 0,
                 errorStyle: '',      //验证的错误提示样式
+                captchaUrl:this.$url + '/api/director/public/get_captcha',
             };
         },
         computed: {
-            ...mapGetters(['director_mail_list']),
+            ...mapGetters(['director_mail_list','site_info']),
             name: {
                 set(value) {
                     this.$store.state.director_mail.name = value
@@ -147,7 +152,15 @@
                     return this.$store.state.director_mail.message
                 }
             },
-            notice: {
+            captcha: {          //验证码
+                set(value) {
+                    this.$store.state.director_mail.captcha = value
+                },
+                get() {
+                    return this.$store.state.director_mail.captcha
+                }
+            },
+            notice: {           //举报提醒
                 set(value) {
                     this.$store.state.director_mail.notice = value
                 },
@@ -207,8 +220,9 @@
             },
         },
         created() {
-            this.$store.dispatch('get_director_mail_list');
-            this.$store.dispatch('get_notice');
+            this.$store.dispatch('get_director_mail_list');     //数据列表
+            this.$store.dispatch('get_notice');                 //举报须知
+            this.$store.dispatch('get_site_info');              //网站信息
         },
         mounted() {
             this.wrapperHeight = document.documentElement.clientHeight - this.$refs.wrapper.getBoundingClientRect().top;

@@ -14,7 +14,7 @@ import './validate.js'
 Vue.config.productionTip = false
 Vue.use(Mint);
 Vue.prototype.$http = axios
-//Vue.prototype.$url = '/apis';
+//Vue.prototype.$url = '/apis';     //打包时将这个值设置为空
 Vue.prototype.$url = '';
 
 /* eslint-disable no-new */

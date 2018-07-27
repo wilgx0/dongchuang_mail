@@ -7,12 +7,14 @@ var formData = {
     name:'',            //留言人姓名
     tel:'',             //留言人电话
     message:'',         //留言内容
+    captcha:'',         //验证码
 }
 const state ={
     director_mail_list:[],
     LastPage:0,     //总页数
     page:1,			//当前页数
     notice:'',
+    site_info:{},
     ...formData,
 }
 
@@ -20,6 +22,9 @@ const getters = {
     director_mail_list(state){
         return state.director_mail_list
     },
+    site_info(state){
+        return state.site_info
+    }
 }
 
 const actions = {
@@ -32,6 +37,7 @@ const actions = {
             name:state.name,
             tel:state.tel,
             message:state.message,
+            captcha:state.captcha
         },function(response){
             response = response.data;
             if(response.code == 1){     //提交成功
@@ -73,6 +79,15 @@ const actions = {
 
         });
     },
+    get_site_info({commit,state}){                //获取站点的相关信息
+        getData(this._vm.$url + '/api/director/public/get_site_info',{},response => {
+            response = response.data;
+            if(response.code == 1){
+                commit(types.GET_SITE_INFO,response.msg);
+            }
+
+        });
+    },
     loadMore_director_mail_list({commit,state},obj){		//加载更多数据
         var _this = this;
         ++ state.page;
@@ -103,6 +118,10 @@ const mutations = {
     },
     [types.GET_NOTICE](state,data){
         state.notice = data;
+    },
+    [types.GET_SITE_INFO](state,data){
+        state.site_info = data;
+        console.log(state.site_info);
     }
 }
 
