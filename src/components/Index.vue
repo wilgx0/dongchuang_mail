@@ -69,7 +69,7 @@
             <div slot="heading">
                 <h1 style="text-align:center;">
                     <span style="float:right;padding-right:10px;" @click="hide_msg">关闭</span>
-                    向东川区公安局局长留言
+                    留  言
                 </h1>
             </div>
 
