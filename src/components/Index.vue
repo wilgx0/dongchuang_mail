@@ -1,6 +1,9 @@
 <template>
     <div class="director-mail">
         <mt-header fixed :title="site_info.site_name||'' ">
+            <div  slot="left">
+                <mt-button @click="show_notice">填报须知</mt-button>
+            </div>
             <div slot="right">
                 <mt-button @click="show_msg">我要留言</mt-button>
             </div>
@@ -37,6 +40,21 @@
                 </mt-loadmore>
             </div>
         </div>
+
+        <!--填报须知-->
+        <modal-dialog ref="dialog_3" class="dialog_3">
+            <div slot="heading">
+                <h1 style="text-align:center;">
+                    <span style="float:right;padding-right:10px;" @click="hide_notice">关闭</span>
+                    填报须知
+                </h1>
+            </div>
+
+            <div class="item-content">
+                {{notice}}
+            </div>
+        </modal-dialog>
+
 
         <!--留言详情-->
         <modal-dialog ref="dialog_1" class="dialog_1">
@@ -79,9 +97,9 @@
                               type="textarea" rows="5" v-model='message' v-validate="'required|min:20'"
                               name="留言内容"></mt-field>
                 </div>
-                <div style="font-size:14px;color:red;margin-bottom:20px;padding-left:5px;">
-                    {{notice}}
-                </div>
+                <!--<div style="font-size:14px;color:red;margin-bottom:20px;padding-left:5px;">-->
+                    <!--{{notice}}-->
+                <!--</div>-->
                 <div style="font-size:14px;color:#888;margin-bottom:5px;padding-left:5px;">
                     以下内容仅供工作人员查看，不对外公开
                 </div>
@@ -184,6 +202,12 @@
             },
             loadBottom() {                          //加载更多数据
                 this.$store.dispatch('loadMore_director_mail_list', this);
+            },
+            show_notice(){                                //显示填报须知
+                this.$refs.dialog_3.open()
+            },
+            hide_notice(){                                //隐藏填报须知
+                this.$refs.dialog_3.close()
             },
             show_detail(index) {                          //显示留言的详情
                 this.detail_index = index;
