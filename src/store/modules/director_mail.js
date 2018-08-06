@@ -31,7 +31,7 @@ const actions = {
     clear_form({commit,state}){
       Object.assign(state,formData);
     },
-    add_msg({commit,state},callback=null){                        //添加留言数据
+    add_msg({commit,state},callback = null){                        //添加留言数据
         let _this  = this;
         getData(_this._vm.$url + '/api/director/public/add_msg',{
             name:state.name,
@@ -43,11 +43,14 @@ const actions = {
             if(response.code == 1){     //提交成功
                 Toast(response.msg);
                 if(callback){
-                    callback();
+                    callback(response.code);
                 }
             } else {                    //提交失败
                 Indicator.close();
                 Toast(response.msg);
+                if(callback){
+                    callback(response.code);
+                }
             }
         });
     },

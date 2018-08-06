@@ -2,10 +2,10 @@
     <div class="director-mail">
         <mt-header fixed :title="site_info.site_name||'' ">
             <div  slot="left">
-                <mt-button @click="show_notice">填报须知</mt-button>
+                <mt-button @click="show_notice">来信须知</mt-button>
             </div>
             <div slot="right">
-                <mt-button @click="show_msg">我要留言</mt-button>
+                <mt-button @click="show_msg">我要写信</mt-button>
             </div>
         </mt-header>
 
@@ -23,7 +23,7 @@
                                 <p>{{item.message|substring(100)}} <em v-if="item.message.length > 100">[查看全文]</em></p>
                                 <template v-if="item.replycontent">
                                     <p><span
-                                            class="item-content-right">{{item.replytime|timestampToTime}}</span><strong>局长回复：</strong>
+                                            class="item-content-right">{{item.replytime|timestampToTime}}</span><strong>回复：</strong>
                                     </p>
                                     <p>{{item.replycontent|substring(100)}}<em v-if="item.message.length > 100">[查看全文]</em></p>
                                 </template>
@@ -41,17 +41,17 @@
             </div>
         </div>
 
-        <!--填报须知-->
+        <!--留言须知-->
         <modal-dialog ref="dialog_3" class="dialog_3">
             <div slot="heading">
                 <h1 style="text-align:center;">
                     <span style="float:right;padding-right:10px;" @click="hide_notice">关闭</span>
-                    填报须知
+                    来信须知
                 </h1>
             </div>
 
-            <div class="item-content">
-                {{notice}}
+            <div class="item-content" v-html="notice">
+
             </div>
         </modal-dialog>
 
@@ -61,7 +61,7 @@
             <div slot="heading">
                 <h1 style="text-align:center;">
                     <span style="float:right;padding-right:10px;" @click="hide_detail">关闭</span>
-                    留言详情
+                    信件详情
                 </h1>
             </div>
 
@@ -74,7 +74,7 @@
                 <template v-if="director_mail_list[detail_index] && director_mail_list[detail_index].replycontent">
                     <p>
                         <span class="item-content-right">{{(director_mail_list[detail_index]?director_mail_list[detail_index].replytime:'')|timestampToTime}}</span>
-                        <strong>局长回复：</strong>
+                        <strong>回复：</strong>
                     </p>
                     <p>{{director_mail_list[detail_index]?director_mail_list[detail_index].replycontent:''}}</p>
                 </template>
@@ -87,15 +87,15 @@
             <div slot="heading">
                 <h1 style="text-align:center;">
                     <span style="float:right;padding-right:10px;" @click="hide_msg">关闭</span>
-                    留  言
+                    写  信
                 </h1>
             </div>
 
             <div class="dialog-content">
                 <div class="page-part" style="margin-bottom:10px;">
-                    <mt-field label="" placeholder="留言内容不少于20个字，请尽量叙述清晰，简明扼要"
+                    <mt-field label="" placeholder="内容不少于20个字，请尽量叙述清晰，简明扼要"
                               type="textarea" rows="5" v-model='message' v-validate="'required|min:20'"
-                              name="留言内容"></mt-field>
+                              name="内容"></mt-field>
                 </div>
                 <!--<div style="font-size:14px;color:red;margin-bottom:20px;padding-left:5px;">-->
                     <!--{{notice}}-->
@@ -110,7 +110,7 @@
                               name="手机号"></mt-field>
                     <!--验证码-->
                     <mt-field label="验证码" v-model="captcha" placeholder="验证码" v-validate="'required'" name="验证码">
-                        <img :src="captchaUrl" height="45px" width="100px" onclick="this.src=this.src+'?'">
+                        <img :src="captchaUrl" height="45px" width="100px" onclick="this.src=this.src+'?'" ref="captchaimg">
                     </mt-field>
                 </div>
                 <div style="margin-top:10px;text-align:center;">
@@ -227,9 +227,16 @@
                 _this.$validator.validateAll().then((result) => {
                     if (result) {
                         Indicator.open();
-                        _this.$store.dispatch('add_msg',function(){
-                            Indicator.close();
-                            _this.hide_msg();
+                        _this.$store.dispatch('add_msg',function(code){
+                            if(code == 1){
+                                Indicator.close();
+                                _this.hide_msg();
+                            } else {                //失败则刷新验证码
+                            //captchaimg
+                               // console.log(_this.$refs.captchaimg);
+                                var src = _this.captchaUrl;
+                                _this.$refs.captchaimg.src = src + '?' + Math.random();
+                            }
                         })
                     }
                 })
@@ -245,7 +252,7 @@
         },
         created() {
             this.$store.dispatch('get_director_mail_list');     //数据列表
-            this.$store.dispatch('get_notice');                 //举报须知
+            this.$store.dispatch('get_notice');                 //留言须知
             this.$store.dispatch('get_site_info');              //网站信息
         },
         mounted() {
@@ -268,7 +275,7 @@
                 overflow: scroll;
                 .page-loadmore-list {
                     /*列表ul元素必须加一个最小高度（li的高度*li初始渲染数量）否则ajax获取数据时，会自动多次触发loadBottom事件，导致数据加载完毕*/
-                    min-height: 900px;
+                    min-height: 600px;
                     .page-loadmore-listitem {
                         min-height: 90px;
                         border-bottom: solid 1px #eee;
@@ -344,7 +351,12 @@
             }
 
         }
-
+        .dialog_3 {
+            .item-content{
+                overflow: auto;
+                height: 90%;
+            }
+        }
         /*错误提示的样式*/
         .error {
             color: red;
